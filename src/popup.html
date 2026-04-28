@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeSync</title>
+  <style>
+    :root {
+      --bg: #081224;
+      --panel: #0f1b32;
+      --panel-soft: #13223f;
+      --border: rgba(148, 163, 184, 0.18);
+      --text: #edf4ff;
+      --muted: #9fb3d1;
+      --blue: #2563eb;
+      --blue-strong: #1d4ed8;
+      --green: #16a34a;
+      --grey: #6b7280;
+      --danger: #ef4444;
+      --shadow: 0 18px 38px rgba(2, 6, 23, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 390px;
+      min-height: 520px;
+      padding: 18px;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.18), transparent 32%),
+        linear-gradient(180deg, #060d1a 0%, var(--bg) 100%);
+    }
+
+    .shell {
+      background: rgba(15, 27, 50, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 24px;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      background: rgba(19, 34, 63, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .panel h2 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .panel p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(6, 13, 26, 0.72);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .field input::placeholder {
+      color: #7283a4;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: rgba(59, 130, 246, 0.55);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+    }
+
+    .token-wrap {
+      position: relative;
+    }
+
+    .token-toggle {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #93c5fd;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .hint {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .disclosure {
+      margin-top: 14px;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(59, 130, 246, 0.24);
+      background: rgba(37, 99, 235, 0.08);
+    }
+
+    .disclosure h3 {
+      font-size: 12px;
+      margin-bottom: 8px;
+      color: #bfdbfe;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .disclosure p {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .disclosure p:last-child {
+      margin-bottom: 0;
+    }
+
+    .status {
+      display: none;
+      margin-top: 14px;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      background: rgba(22, 163, 74, 0.16);
+      border: 1px solid rgba(22, 163, 74, 0.34);
+      color: #c5f5d4;
+    }
+
+    .status.error {
+      background: rgba(239, 68, 68, 0.16);
+      border: 1px solid rgba(239, 68, 68, 0.34);
+      color: #fecaca;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      flex: 1;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-strong) 100%);
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--text);
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .summary-line strong {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="brand">CodeSync</div>
+
+    <section id="welcomeView">
+      <h1 id="welcomeTitle">Welcome, let's get started</h1>
+      <p class="lead" id="welcomeText">Connect LeetCode to GitHub in a clean, controlled way.</p>
+    </section>
+
+    <section id="formView" class="panel">
+      <h2>LeetCode Setup</h2>
+      <p>Manual is the default. That means after a real accepted submit, you choose when to push to GitHub.</p>
+
+      <div class="field">
+        <label for="leetcodeUsername">LeetCode Username</label>
+        <input id="leetcodeUsername" data-autosave type="text" placeholder="e.g. johndoe" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="repoOwner">GitHub Owner / Org</label>
+        <input id="repoOwner" data-autosave type="text" placeholder="e.g. johndoe" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="repoName">Repository Name</label>
+        <input id="repoName" data-autosave type="text" placeholder="e.g. leetcode-solutions" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="githubToken">GitHub Token</label>
+        <div class="token-wrap">
+          <input id="githubToken" data-autosave type="password" placeholder="github_pat_xxx" autocomplete="off">
+          <button class="token-toggle" id="toggleToken" type="button">show</button>
+        </div>
+        <div class="hint">Use the token that has access to this exact repository.</div>
+      </div>
+
+      <div class="field">
+        <label for="syncMode">Sync Mode</label>
+        <select id="syncMode" data-autosave>
+          <option value="manual">Manual</option>
+          <option value="automatic">Automatic</option>
+        </select>
+        <div class="hint">Manual shows the page button after acceptance. Automatic pushes immediately after acceptance.</div>
+      </div>
+
+      <div class="disclosure">
+        <h3>Before You Enable Sync</h3>
+        <p>CodeSync reads accepted-solution code, problem metadata, and your visible LeetCode username from LeetCode problem pages so it can prepare a GitHub sync.</p>
+        <p>CodeSync sends your solution code and selected repository details to the GitHub API only to create or update files in the repository you choose.</p>
+        <p>Your settings, repository details, token, and sync preference are stored in extension storage. Use a token that has access only to the repository you want to sync.</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="saveBtn" type="button">Save Settings</button>
+      </div>
+    </section>
+
+    <section id="readyView" class="panel" hidden>
+      <h2>You're set</h2>
+      <p>CodeSync is ready for LeetCode. You can come back here anytime to change your repo, token, username, or sync mode. Sync only works for the matching LeetCode username you configured.</p>
+
+      <div class="summary-line"><span>LeetCode username</span><strong id="readyUsername"></strong></div>
+      <div class="summary-line"><span>GitHub repo</span><strong id="readyRepo"></strong></div>
+      <div class="summary-line"><span>Sync mode</span><strong id="readyMode"></strong></div>
+      <div class="summary-line"><span>Synced problems</span><strong id="readyCount"></strong></div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" id="editBtn" type="button">Edit Settings</button>
+      </div>
+    </section>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
