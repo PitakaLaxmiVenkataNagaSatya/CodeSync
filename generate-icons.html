@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head><title>Icon Generator</title></head>
+<body>
+<p>Right-click each canvas and "Save image as" to the icons/ folder.</p>
+<canvas id="c16" width="16" height="16"></canvas> <span>icon16.png</span><br><br>
+<canvas id="c48" width="48" height="48"></canvas> <span>icon48.png</span><br><br>
+<canvas id="c128" width="128" height="128"></canvas> <span>icon128.png</span>
+<script>
+function drawIcon(canvasId, size) {
+  const c = document.getElementById(canvasId);
+  const ctx = c.getContext('2d');
+  const r = size / 2;
+
+  // Background circle
+  ctx.beginPath();
+  ctx.arc(r, r, r, 0, Math.PI * 2);
+  ctx.fillStyle = '#FFA116';
+  ctx.fill();
+
+  // LC text
+  ctx.fillStyle = '#fff';
+  ctx.font = `bold ${size * 0.35}px Arial`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('LC', r, r - size * 0.08);
+
+  // GitHub arrow
+  ctx.fillStyle = '#fff';
+  ctx.font = `${size * 0.2}px Arial`;
+  ctx.fillText('→GH', r, r + size * 0.25);
+}
+drawIcon('c16', 16);
+drawIcon('c48', 48);
+drawIcon('c128', 128);
+</script>
+</body>
+</html>
